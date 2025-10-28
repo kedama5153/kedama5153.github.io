@@ -10,5 +10,75 @@
     <h1><marquee>やりますねぇ！</marquee></h1>
     <p>やりますやります</p>
     <h2>これ指摘されたらgithubは淫夢厨だってはっきりわかんだね</h2>
+    <div class="wrap">
+}
+
+
+// --- 入力 ---
+document.addEventListener('keydown', e=>{
+if(!running) return;
+if(e.key === 'ArrowLeft') { playerMove(-1); }
+else if(e.key === 'ArrowRight') { playerMove(1); }
+else if(e.key === 'ArrowDown') { playerDrop(); }
+else if(e.key === 'ArrowUp') { rotatePlayer(1); }
+else if(e.code === 'Space') { e.preventDefault(); playerHardDrop(); }
+else if(e.key === 'p' || e.key === 'P') { togglePause(); }
+draw();
+});
+
+
+// ボタン
+document.getElementById('start').addEventListener('click', ()=>{
+startGame();
+});
+
+
+document.getElementById('pause').addEventListener('click', ()=>{
+togglePause();
+});
+
+
+function togglePause(){
+if(!running) return;
+paused = !paused;
+if(paused){
+cancelAnimationFrame(requestId);
+document.getElementById('pause').textContent = '再開';
+} else {
+lastTime = performance.now();
+requestId = requestAnimationFrame(update);
+document.getElementById('pause').textContent = '一時停止';
+}
+}
+
+
+function startGame(){
+// reset everything
+arena = createMatrix(COLS, ROWS);
+player.score = 0;
+player.level = 1;
+player.matrix = createPiece(randomName());
+player.next = createPiece(randomName());
+player.pos = {x: Math.floor((COLS-4)/2), y:-2};
+dropInterval = 1000;
+running = true;
+paused = false;
+document.getElementById('pause').textContent = '一時停止';
+updateUI();
+lastTime = performance.now();
+cancelAnimationFrame(requestId);
+requestId = requestAnimationFrame(update);
+}
+
+
+// --- 初期表示 ---
+// プレースホルダーの next を作る
+player.next = createPiece(randomName());
+player.matrix = createPiece(randomName());
+player.pos = {x: Math.floor((COLS-4)/2), y:-2};
+updateUI();
+
+
+</script>
   </body>
 </html>
